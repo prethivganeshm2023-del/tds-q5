@@ -89,10 +89,9 @@ def lines_from_traceback(tb: str) -> List[int]:
     return [int(nums[-1])] if nums else []
 
 
-@app.post("/code-interpreter")
-@app.post("/api/code-interpreter")
 @app.post("/")
-def code_interpreter(req: CodeRequest):
+@app.post("/{full_path:path}")   # answer on any path Vercel passes in (e.g. /code-interpreter, /api/index)
+def code_interpreter(req: CodeRequest, full_path: str = ""):
     res = execute_python_code(req.code)
     if res["success"]:
         return {"error": [], "result": res["output"]}
